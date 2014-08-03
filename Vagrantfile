@@ -45,7 +45,16 @@ Vagrant.configure("2") do |config|
     ubuntu12044.vm.provider "virtualbox" do |v|
       v.gui = true
     end
+
+    # Run our ansible modules
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "playbook.yml"
+      ansible.sudo = true
+    end
+  
   end
+
+
 
 end
 
