@@ -1,0 +1,82 @@
+---
+ - hosts: all
+
+   vars:
+     useComposer: true
+
+   handlers:
+
+   - name: restart iptables
+     service: name=iptables state=restarted
+
+   - name: restart apache2
+     service: name=apache2 state=restarted
+
+   tasks: 
+
+#   - name: copy firewall template
+#     copy: src=templates/etc/sysconfig/iptables dest=/etc/sysconfig/iptables owner=root group=root mode=0600
+#     notify: restart iptables
+#
+   - name: Update apt get (ubuntu) update_cache
+     apt: update_cache=yes
+
+   - name: Install http and php etc
+     apt: pkg={{ item }} state=installed
+     with_items:
+        - apache2
+        - php5
+        - libapache2-mod-php5
+        - php5-mcrypt
+        - php5-common
+        - php5-mysql
+        - php5-curl
+        - git
+
+   - name: Copy Apache vhost config file for govreadystat 
+     copy: src=templates/etc/httpd/conf.d/10-govreadystats.conf dest=/etc/apache2/sites-available/10-govreadystat.conf
+     notify: restart apache2
+
+   # Enable govreadystats site
+   - name: Create symlink for govreadystats site 
+     file: path=/etc/apache2/sites-enabled/10-govreadystat.conf src=/etc/apache2/sites-available/10-govreadystat.conf owner=root group=root state=link
+     notify: restart apache2
+
+   # Disable default site
+   - name: Disable default site 
+     file: path=/etc/apache2/sites-enabled/000-default state=absent
+     notify: restart apache2
+
+   # Enable apache rewrite engine
+   - name: Create symlink for enabling mod rewrite
+     file: path=/etc/apache2/mods-enabled/rewrite.load src=/etc/apache2/mods-available/rewrite.load owner=root group=root state=link
+     notify: restart apache2
+
+   - name: Ensure Apache running
+     service: name=apache2 state=started enabled=yes
+
+   # sudo groupadd govreadystats
+   - name: Add group `govreadystats`
+     group: name=govreadystats state=present
+
+   # sudo useradd -g govreadystats govreadystats
+   - name: Add user `govreadystats`
+     user: name=govreadystats state=present group=govreadystats shell=/bin/bash state=present comment="govreadystats"
+
+   # Add log directory for govreadyreadystats in /var/log/govreadystats
+   - name: Create govreadystats log file
+     file: path=/var/local/govreadystats/ owner=govreadystats group=govreadystats state=directory
+
+   # Add apache [Ubuntu] Aapache user `www-data` to govreadystats group
+   # usermod --groups govreadystat www-data
+   - name: Add Ubuntu Apache user www-data to govreadystats group
+     user: name=www-data state=present group=govreadystats append=yes
+ 
+   # git checkout govreadystats
+   - name: Clone govreadystats
+     git: repo=https://github.com/GovReady/govreadystats.git dest=/vagrant/
+
+   - name: copy credential file
+     command: cp /vagrant/govreadystats/html/credentials-example.inc.php /vagrant/govreadystats/html/credentials.inc.php
+
+
