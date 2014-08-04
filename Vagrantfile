@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
     ubuntu12044.vm.provision "ansible" do |ansible|
       ansible.playbook = "playbook-ubuntu.yml"
       ansible.sudo = true
-      ansible.verbose = 'vvv'
+      # ansible.verbose = 'vvv'
     end
   
   end
