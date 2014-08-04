@@ -72,10 +72,10 @@
    - name: Add Ubuntu Apache user www-data to govreadystats group
      user: name=www-data state=present group=govreadystats append=yes
 
-   - name: copy credential file
-     command: cp /vagrant/govreadystats/html/credentials-example.inc.php /vagrant/govreadystats/html/credentials.inc.php
-
    # git checkout govreadystats
    - name: Clone govreadystats
      git: repo=git@github.com:GovReady/govreadystats.git dest=/vagrant/ accept_hostkey=yes
 
+   - name: copy credential file
+     command: cp /vagrant/govreadystats/html/credentials-example.inc.php /vagrant/govreadystats/html/credentials.inc.php
+     notify: restart apache2
