@@ -61,7 +61,7 @@
 
    # sudo useradd -g govreadystats govreadystats
    - name: Add user `govreadystats`
-     user: name=govreadystats state=present group=govreadystats shell=/bin/bash state=present comment="govreadystats"
+     user: name=govreadystats group=govreadystats shell=/bin/bash state=present comment="govreadystats"
 
    # Add log directory for govreadyreadystats in /var/log/govreadystats
    - name: Create govreadystats log file
@@ -74,7 +74,7 @@
 
    # git checkout govreadystats
    - name: Clone govreadystats
-     git: repo=git@github.com:GovReady/govreadystats.git dest=/vagrant/ accept_hostkey=yes
+     git: repo=https://github.com/GovReady/govready.git dest=/vagrant/ accept_hostkey=yes
 
    - name: copy credential file
      command: cp /vagrant/govreadystats/html/credentials-example.inc.php /vagrant/govreadystats/html/credentials.inc.php
