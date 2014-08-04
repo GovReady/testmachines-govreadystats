@@ -64,8 +64,8 @@
      user: name=govreadystats group=govreadystats shell=/bin/bash state=present comment="govreadystats"
 
    # Add log directory for govreadyreadystats in /var/log/govreadystats
-   - name: Create govreadystats log file
-     file: path=/var/local/govreadystats/ owner=govreadystats group=govreadystats state=directory
+   - name: Create govreadystats log file directory
+     file: path=/var/local/govreadystats/ owner=www-data group=govreadystats state=directory mode=0774
 
    # Add apache [Ubuntu] Aapache user `www-data` to govreadystats group
    # usermod --groups govreadystat www-data
