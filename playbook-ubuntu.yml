@@ -75,7 +75,7 @@
    # git checkout govreadystats
    # Use command instead of ansible git module because git module requires complicated user specification and ssh forwarding
    - name: Clone govreadystats
-     command: git clone https://github.com/GovReady/govreadystats.git /vagrant/govreadystats
+     command: git clone https://github.com/GovReady/govreadystats.git /vagrant/govreadystats creates=/vagrant/govreadystats
 
    - name: copy credential file
      command: cp /vagrant/govreadystats/html/credentials-example.inc.php /vagrant/govreadystats/html/credentials.inc.php
