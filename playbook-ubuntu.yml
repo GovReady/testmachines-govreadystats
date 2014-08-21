@@ -68,7 +68,7 @@
      file: path=/var/local/govreadystats/ owner=www-data group=govreadystats state=directory mode=0774
 
    # Add apache [Ubuntu] Aapache user `www-data` to govreadystats group
-   # usermod --groups govreadystat www-data
+   # usermod --groups govreadystats www-data
    - name: Add Ubuntu Apache user www-data to govreadystats group
      user: name=www-data state=present group=govreadystats append=yes
 
